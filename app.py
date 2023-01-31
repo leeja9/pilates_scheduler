@@ -67,6 +67,9 @@ def _start_menu() -> str:
         # quit for 'q' input
         if opt.upper() == 'Q':
             return "Q"
+        elif opt.upper() == 'MAIN':
+            opt = None
+            continue
         try:
             opt = int(opt)
             if opt == 1:
@@ -84,7 +87,8 @@ def _start_menu() -> str:
 
 
 def _get_opt() -> str:
-    opt = input("Please enter the integer of an option above ('q' to quit): ")
+    opt = input("Please enter the integer of an option above...\n"
+                "['q' for quit, 'main' for main menu]: ")
     return opt
 
 # 2. Login
@@ -103,10 +107,12 @@ def _login_menu() -> str:
         # quit for 'q' input
         usr = _get_username()
         if usr.upper() == 'Q':
-            return True
+            return 'Q'
+        elif usr.upper() == 'MAIN':
+            return 'start'
         pw = _get_pw()
         if pw.upper() == 'Q':
-            return True
+            return 'Q'
 
         try:
             name = dbc.validate_login(usr, pw)
@@ -133,13 +139,19 @@ def _create_user_menu() -> str:
         usr = _get_username()
         if usr.upper() == 'Q':
             return "Q"
+        elif usr.upper() == 'MAIN':
+            return 'start'
         pw = _get_pw()
         if pw.upper() == 'Q':
             return "Q"
+        elif pw.upper() == 'MAIN':
+            return "start"
         print('Please confirm password')
         pw2 = _get_pw()
         if pw2.upper() == 'Q':
             return "Q"
+        elif pw2.upper() == 'MAIN':
+            return 'start'
         if pw != pw2:
             print("Passwords didn't match...")
             usr = None
