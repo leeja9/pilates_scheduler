@@ -51,13 +51,11 @@ DROP TABLE IF EXISTS `mydb`.`Users` ;
 CREATE TABLE IF NOT EXISTS `mydb`.`Users` (
   `userID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `userName` VARCHAR(256) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(1024) NOT NULL,
   `authLvl` INT UNSIGNED NOT NULL DEFAULT 2,
-  `salt` VARCHAR(256) NULL,
   PRIMARY KEY (`userID`),
   UNIQUE INDEX `userID_UNIQUE` (`userID` ASC) VISIBLE,
-  UNIQUE INDEX `userName_UNIQUE` (`userName` ASC) VISIBLE,
-  UNIQUE INDEX `salt_UNIQUE` (`salt` ASC) VISIBLE)
+  UNIQUE INDEX `userName_UNIQUE` (`userName` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
@@ -198,22 +196,22 @@ INSERT INTO  `mydb`.`Users`
 VALUES
 (
   'admin',
-  'test123',
+  '8f6c989c0f601cf1b2d4b240dd740fe2',
   0
 ),
 (
   'instructor1',
-  'test123',
+  '8f6c989c0f601cf1b2d4b240dd740fe2',
   1
 ),
 (
   'client1',
-  'test123',
+  '8f6c989c0f601cf1b2d4b240dd740fe2',
   2
 ),
 (
   'client2',
-  'test123',
+  '8f6c989c0f601cf1b2d4b240dd740fe2',
   2
 );
 

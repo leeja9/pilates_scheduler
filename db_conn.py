@@ -180,8 +180,8 @@ def create_user(usr: str, pw: str, auth: int = 2) -> str:
         1=instructor
         2=client
     '''
-    query = ("INSERT INTO Users (userName, password, authLvl)"
-             "VALUES ('%s', '%s', '%s')" % (usr, pw, auth))
+    query = ("INSERT INTO Users (userName, password, authLvl) "
+             "VALUES ('%s', '%s', '%i')" % (usr, pw, auth))
     try:
         _cur.execute(query)
         return "Successfully added %s to system" % usr
@@ -204,7 +204,7 @@ def validate_login(usr: str, pw: str) -> str:
     _cur.execute(query)
     userlist = _cur.fetchall()
     if len(userlist) == 1:
-        usr_id, usr_name, usr_pw, auth, salt = userlist[0]
+        usr_id, usr_name, usr_pw, auth = userlist[0]
     else:
         return None
 

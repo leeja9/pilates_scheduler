@@ -8,6 +8,13 @@
 import db_conn as dbc
 import datetime
 from getpass import getpass
+import socket
+import os
+from dotenv import load_dotenv
+load_dotenv('./.env')
+
+_PWHOST = os.getenv('PWHOST')
+_PWPORT = int(os.getenv('PWPORT'))
 
 # 1. STARTUP
 
@@ -176,7 +183,14 @@ def _get_username() -> str:
 
 def _get_pw() -> str:
     pw = getpass("Please enter your Password ('q' to quit): ")
-    return pw
+    if pw.upper() == 'Q':
+        return pw
+    with socket.socket() as s:
+        s.connect((_PWHOST, _PWPORT))
+        s.sendall(pw.encode())
+        pw_hash = s.recv(1024)
+
+    return pw_hash.decode()
 
 # 3. Main menu
 
@@ -333,15 +347,29 @@ def _get_dates() -> str:
     '''
     start_date, end_date = None, None
     while start_date is None:
-        start_date = input("Please enter a start date to search [mm/dd/yyyy]: ")
-        end_date = input("Please enter an end date..\n: "
-                         "Enter a date [mm/dd/yyyy] OR number of days from start [dd]:\n")
+        start_prompt = "Please enter a start date to search [mm/dd/yyyy]: "
+        start_date = input(start_prompt)
+        if start_date.upper() == 'Q':
+            return "Q"
+        elif start_date.upper() == 'MAIN':
+            return "main"
+        elif start_date.upper() == 'EXIT':
+            return "start"
+        end_prompt = '''Please enter an end date..\n:
+        Enter a date [mm/dd/yyyy] OR number of days from start:'''
+        end_date = input(end_prompt)
+        if end_date.upper() == 'Q':
+            return "Q"
+        elif end_date.upper() == 'MAIN':
+            return "main"
+        elif end_date.upper() == 'EXIT':
+            return "start"
         try:
-            m, d, y = start_date.split('/')
-            start_date = datetime.date(int(y), int(m), int(d))
-            m, d, y = end_date.split('/')
-            end_date = datetime.date(int(y), int(m), int(d))
-            sessions = dbc.read_sessions((start_date, end_date))
+            start, end = _get_date(start_date, end_date)
+            if start is None:
+                print("Please verify your input.")
+                continue
+            sessions = dbc.read_sessions((start, end))
             print("Here are the available sessions:\n")
             for session in sessions:
                 print(session)
@@ -354,6 +382,30 @@ def _get_dates() -> str:
         except Exception as e:
             print("Please verify your input\n%s\n" % e)
             start_date = None
+
+
+def _get_date(start: str, end: str) ->\
+        tuple[datetime.date, datetime.date] | tuple[None, None]:
+    '''
+    Validate start and end date.
+    Return formated tuple or None if invalid
+    '''
+    try:
+        date_format = '%m/%d/%Y'
+        start = datetime.datetime.strptime(start, date_format).date()
+        end = end.split('/')
+        if len(end) == 1:
+            delta = datetime.timedelta(int(end[0]))
+            end = start + delta
+            return (start, end)
+        elif len(end) == 3:
+            end = datetime.datetime.strptime('/'.join(end), date_format).date()
+            return (start, end)
+        else:
+            return (None, None)
+    except Exception as e:
+        print('Error:\n%s' % e)
+        return (None, None)
 
 # MAIN LOOP
 
