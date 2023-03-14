@@ -109,11 +109,6 @@ def change_db(DB: str) -> bool:
 # CRUD: Sessions Table
 # #######################
 
-# CREATE
-def create_sessions():
-    # TODO
-    pass
-
 
 # READ
 def read_sessions(filter_dates: tuple[datetime.date, datetime.date] = None,
@@ -178,18 +173,6 @@ def get_upcoming_sessions(client_id: int) -> cursor.Generator:
         return _cur
     except Exception as e:
         return e
-
-
-# UPDATE
-def update_session():
-    # TODO
-    pass
-
-
-# DELETE
-def delete_session():
-    # TODO
-    pass
 
 
 # #######################
@@ -315,18 +298,6 @@ def edit_info(fname: str, lname: str, email: str, phone: int,
         return e
 
 
-# UPDATE
-def update_user():
-    # TODO
-    pass
-
-
-# DELETE
-def delete_user():
-    # TODO
-    pass
-
-
 # #######################
 # CRUD: Clients Table
 # #######################
@@ -353,24 +324,6 @@ def create_client(info: dict) -> str:
         return ("create_client() failed to add %s "
                 "to system due to error...\n%s"
                 % (fname, e))
-
-
-# READ
-def read_client():
-    # TODO
-    pass
-
-
-# UPDATE
-def update_client():
-    # TODO
-    pass
-
-
-# DELETE
-def delete_client():
-    # TODO
-    pass
 
 
 # #######################
@@ -400,29 +353,3 @@ def create_instructor(info: dict) -> str:
         return ("create_instructor() failed to add "
                 "%s to system due to error...\n%s"
                 % (fname, e))
-
-
-# READ
-def read_instructor():
-    # TODO
-    pass
-
-
-# UPDATE
-def update_instructor():
-    # TODO
-    pass
-
-
-# DELETE
-def delete_instructor():
-    # TODO
-    pass
-
-
-if __name__ == '__main__':
-    init_conn()
-    status = create_user('admin', 'test123')
-    # i, name, pw, a, s = usr[0]
-    print(status)
-    close_conn()
