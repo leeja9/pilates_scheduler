@@ -529,7 +529,7 @@ def edit_info() -> str:
             pw2 = getpass("Confirm new password: ")
             if pw1 != pw2:
                 print("Password mismatch")
-        pw = pw1
+        pw = _get_pw(pw1)
     status = dbc.edit_info(fname, lname, email, phone,
                            _USR_ID, username, _CLIENT_ID, pw)
     print("Status of update: %s" % status)
