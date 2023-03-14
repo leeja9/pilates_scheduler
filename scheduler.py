@@ -244,8 +244,8 @@ def _validate_email(email: str) -> bool:
 
 def _validate_phone(phone: str) -> bool:
     '''Validates phone number string'''
-    nums = [i for i in range(10)]
-    if len(nums) > 0 and len(phone) != 10:
+    nums = [str(i) for i in range(10)]
+    if len(phone) > 0 and len(phone) != len("5554443333"):
         return False
     for i in phone:
         if i not in nums:
@@ -259,11 +259,12 @@ def _get_username() -> str:
     return usr
 
 
-def _get_pw() -> str:
+def _get_pw(pw: str = None) -> str:
     '''Uses password_hash microservice to get hashed password'''
-    pw = getpass("Please enter your Password ['q'=quit, 'm'=main menu]: ")
-    if _check_opt(pw):
-        return pw.upper()
+    if pw is None:
+        pw = getpass("Please enter your Password ['q'=quit, 'm'=main menu]: ")
+        if _check_opt(pw):
+            return pw.upper()
     with socket.socket() as s:
         s.connect((global_var.PWHOST, global_var.PWPORT))
         s.sendall(pw.encode())
@@ -499,7 +500,7 @@ def edit_info() -> str:
     email = None if len(email) == 0 else email
     _EMAIL = email if email is not None else _EMAIL
 
-    phone_prompt = "Phone (current=%i): " % _PHONE
+    phone_prompt = "Phone (current=%s): " % str(_PHONE)
     phone = input(phone_prompt)
     while len(phone) > 0 and not _validate_phone(phone):
         phone = input(phone_prompt)
