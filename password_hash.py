@@ -8,7 +8,7 @@ load_dotenv('./.env')
 HOST = os.getenv("PWHOST")
 PORT = int(os.getenv("PWPORT"))
 SALT = os.getenv("SALT")
-
+print("Starting password hash microservice")
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
     print("Listening on %s:%i" % (HOST, PORT))
